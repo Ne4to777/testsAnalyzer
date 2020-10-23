@@ -1,0 +1,11 @@
+module.exports = ['/home/nybble/dev/market/platform.desktop/app/resource/__spec__/quiz/quiz.products.spec.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/serpUgc/getUserPoll.testData.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/serpUgc/serpUgc.getUserPoll.spec.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/serpUgcUpdate/serpUgcUpdate.updateUserPoll.spec.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/serpUgcUpdate/updateUserPoll.testData.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/shopInfo/shopInfo.getBrandName.spec.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/shopInfo/shopInfo.getInfo.spec.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/shopInfo/testData/getInfoBackend.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/shopInfo/testData/getInfoResponse.js',
+    '/home/nybble/dev/market/platform.desktop/app/resource/__spec__/social/social.deleteProfile.spec.js',
+]
