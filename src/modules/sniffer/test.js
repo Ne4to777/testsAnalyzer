@@ -1,1 +1,0 @@
-const testing = require('./tests')

@@ -4,7 +4,7 @@ module.exports = {
         'decision',
         'content'
     ],
-    DECISIONS: {
+    DECISION_TYPES_MAP: {
         C: 'Component',
         E: 'E2E',
         U: 'Unit'

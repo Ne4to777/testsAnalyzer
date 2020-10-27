@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-cond-assign */
 const { debugParams } = require('./debuggers')
 
@@ -9,17 +10,25 @@ const testC = re => value =>
     // debugParams({ name: 'testC', types: [RegExp, String] })(re, value) ||
     re.test(value)
 
-const getFirstGroupMatches = re => data => {
+const getGroupMatches = n => re => predicate => data => {
     let itemArray
     const result = []
+    re.lastIndex = 0
     while (itemArray = re.exec(data)) {
-        result.push(itemArray[2])
+        const item = itemArray[n]
+        if (predicate(item)) result.push(item)
     }
     return result
+}
+
+const matchC = re => data => {
+    const res = data.match(re)
+    if (res) return res[1]
 }
 
 module.exports = {
     regExpOf,
     testC,
-    getFirstGroupMatches
+    matchC,
+    getGroupMatches
 }

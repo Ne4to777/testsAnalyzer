@@ -6,7 +6,6 @@ module.exports = {
         ],
         exclude: {
             files: [
-                '^\\.[a-z]',
                 'helpers.',
                 '.response.',
                 '.result.',
@@ -37,7 +36,7 @@ module.exports = {
             // '.',
             'spec(_|/)',
             'test',
-            // 'gemini'
+            'gemini'
         ]
     },
     analyzer: {
@@ -60,14 +59,14 @@ module.exports = {
             E2E: {
                 path: [
                     /gemini/,
-                    /\/tops\/pages\//
+                    /\/tops\//
                 ],
                 content: [
                     /страница/i,
                     /переход/i,
                     /вне окна/i,
                     /на взаимодейств/i,
-                    /mergeSuites/i
+                    /createPageObject/
                 ]
             },
             Unit: {
@@ -83,10 +82,7 @@ module.exports = {
         }
     },
     reporter: {
-        root: '/home/nybble/dev/market/',
-        filepath: 'whitemarket/desktop.csv'
-    },
-    logger: {
-        foo: 'bar'
+        root: '/home/nybble/dev/market/platform.desktop/',
+        filepath: 'market/desktop.csv'
     }
 }

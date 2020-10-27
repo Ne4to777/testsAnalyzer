@@ -2,85 +2,114 @@
 /* eslint-disable guard-for-in */
 
 const { write } = require('../../utility/src/fs')
-const { pipeSync, pipe, parallelSync } = require('../../utility/src/combinators')
 const {
-    arrayToCsv, joinC, reduceToArray, filterC
+    pipeSync, pipe, parallelSync, I, K, C
+} = require('../../utility/src/combinators')
+const {
+    arrayToCsv, joinCSync, reduceToArraySync, filterCSync, reduceCSync, last, concatCSync, isEmpty, mapCSync, head
 } = require('../../utility/src/array')
 const { joinAbs } = require('../../utility/src/path')
 const { getProp } = require('../../utility/src/object')
-const { trimLeft, getEmptyString } = require('../../utility/src/string')
-const { getFirstGroupMatches, testC } = require('../../utility/src/regexp')
-const { DECISIONS, SCHEME } = require('../../constants')
+const { trimLeft, getEmptyString, splitC } = require('../../utility/src/string')
+const { getGroupMatches, testC, } = require('../../utility/src/regexp')
+const { ifElse, ifThen } = require('../../utility/src/conditional')
+const { DECISION_TYPES_MAP, SCHEME } = require('../../constants')
+const { log } = require('../../utility/src/debuggers')
+const { equal } = require('../../utility/src/equality')
 
 const [pathKey, decisionKey, contentKey] = SCHEME
+
 const OUTPUT_PATH = 'output'
+
 const joinOutput = joinAbs(OUTPUT_PATH)
 
-const filterCyrillic = data => data.replace(/[^а-яё\n\s]/ig, '')
-const clearBreakLines = data => data.replace(/\s*(\r|\n)/mg, '\n')
-const clearFirstBreakLine = data => data.replace(/^\n/, '')
-
-const matchDescribeAndIt = pipeSync([
-    getFirstGroupMatches(/(describe|it)\('(.+)',/igm),
-    joinC('\n')
-])
-
-const ifElse = predicate => onTrue => onFalse => data => predicate(data)
-    ? onTrue(data)
-    : onFalse
-        ? onFalse(data)
-        : false
-
-const getMatchHandler = pipeSync([
-    testC,
+const ifLastEqual = pipeSync([
+    last,
+    equal,
     ifElse,
 ])
 
-const makeSuiteReplacer = pipeSync([
-    filterCyrillic,
-    clearBreakLines,
-    clearFirstBreakLine
+const duplicateFilter = parallelSync(I)([
+    ifLastEqual,
+    K,
+    C(concatCSync)
 ])
 
-const matchMakeSuite = getMatchHandler(/makeSuite/ig)(makeSuiteReplacer)(getEmptyString)
+const deduplicateArray = reduceCSync([])(duplicateFilter)
 
 const testForGemini = testC(/gemini/)
 
+const matchByRE = n => re => ifElse(testC(re))(
+    pipeSync([
+        getGroupMatches(n)(re)(I),
+        joinCSync('\n')
+    ])
+)(
+    getEmptyString
+)
+
+const matchByRE1 = matchByRE(1)
+const matchByRE2 = matchByRE(2)
+
+const matchMakeSuite = matchByRE1(/makeSuite\('(.+)'/ig)
+const matchMakeCase = matchByRE1(/'(.+)': makeCase\(/ig)
+const matchMergeSuites = matchByRE1(/'(.+)': mergeSuites\(/ig)
+
+const matchDescribe = matchByRE1(/describe\('(.+)'.+/ig)
+const matchIt = matchByRE2(/\sit\(('|`)(.+)('|`)+/ig)
+
+const matchAnyChar = matchByRE1(/'([а-яёa-z0-9.,+\-"\s<>:${}]+)'/ig)
+
+const hermioneMatch = data => data.replace(/makeCase\(|makeSuite\(|prepareSuite\(|.+/ig, match => {
+    if (/makeCase/ig.test(match)) return matchMakeCase(data)
+    if (/makeSuite/ig.test(match)) return matchMakeSuite(data)
+    if (/prepareSuite/ig.test(match)) return matchMergeSuites(data)
+    return ''
+})
+
+const unitMatch = data => data.replace(/describe\(|\sit\(|.+/ig, match => {
+    if (/describe/.test(match)) return matchDescribe(data)
+    if (/\sit/.test(match)) return matchIt(data)
+    return ''
+})
+
+const anyMatch = data => data.replace(/'[а-яё]+|.+/i, match => {
+    if (/'[а-яё]+/ig.test(match)) return matchAnyChar(data)
+    return ''
+})
+
+const extractContent = pipeSync([
+    splitC(/\n/),
+    filterCSync(testC(/[a-zа-яё0-9]/ig)),
+    mapCSync(parallelSync(x => y => z => x || y || z)([
+        hermioneMatch,
+        unitMatch,
+        anyMatch
+    ])),
+    filterCSync(Boolean),
+    deduplicateArray,
+    joinCSync('\n'),
+    // log
+])
+
 const beautify = pipeSync([
     trimLeft,
-    trimRoot => reduceToArray(acc => item => {
+    trimRoot => reduceToArraySync(item => {
         const path = item[pathKey]
         let decision = item[decisionKey]
+        // console.log(path)
+
         let content = extractContent(item[contentKey])
         if (testForGemini(path)) {
             content = 'snapshot'
-            decision = DECISIONS.E
+            decision = DECISION_TYPES_MAP.E
         }
-        return acc.concat({
+        return {
             [pathKey]: trimRoot(path),
             [decisionKey]: decision,
             [contentKey]: content
-        })
+        }
     })
-])
-
-const chooseMatch = matches => {
-    for (const item of matches) {
-        if (item) return item
-    }
-    return ''
-}
-
-const matchesJoiner = describeAndItData => makeSuiteData => [describeAndItData, makeSuiteData]
-
-const getMatchesByMatchers = parallelSync(matchesJoiner)([
-    matchDescribeAndIt,
-    matchMakeSuite
-])
-
-const extractContent = pipeSync([
-    getMatchesByMatchers,
-    chooseMatch
 ])
 
 const getContentKey = getProp(contentKey)
@@ -97,7 +126,7 @@ const writeToOutput = pipeSync([
 
 module.exports = ({ filepath, root }) => pipe([
     beautify(root),
-    filterC(removeEmpty),
+    filterCSync(removeEmpty),
     arrayToCsv(SCHEME),
     writeToOutput(filepath)
 ])

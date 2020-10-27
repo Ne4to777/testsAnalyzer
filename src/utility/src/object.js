@@ -10,10 +10,22 @@ const hasOwnProperty = Function.prototype.call.bind(Object.prototype.hasOwnPrope
 
 const hasOwnPropertyC = curry2(hasOwnProperty)
 
+const objectToArraySync = f => o => {
+    const result = []
+    for (const key in o) {
+        if (hasOwnProperty(o, key)) result.push(f(o[key]))
+    }
+    return result
+}
+
+const isObjectFilled = o => Object.keys(o).length
+
 module.exports = {
     getProp,
     execMethodEmpty,
     execMethod,
     hasOwnPropertyC,
-    merge
+    merge,
+    objectToArraySync,
+    isObjectFilled
 }
