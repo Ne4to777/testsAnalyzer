@@ -13,27 +13,27 @@ describe('analyzer', () => {
     const checkers = {
         Unit: {
             path: [
-                /some1\/folder1\/file1/
+                /some1\/folder1\/file1/,
             ],
             content: [
-                /content1/
-            ]
+                /content1/,
+            ],
         },
         Component: {
             path: [
-                /some2\/folder2\/file2/
+                /some2\/folder2\/file2/,
             ],
             content: [
-                /content2/
-            ]
+                /content2/,
+            ],
         },
         E2E: {
             path: [
-                /some3\/folder3\/file3/
+                /some3\/folder3\/file3/,
             ],
             content: [
-                /content3/
-            ]
+                /content3/,
+            ],
         },
     }
     test('string should match with Array<RegExp>', () => {
@@ -57,8 +57,9 @@ describe('analyzer', () => {
     test('decisionsJoiner', () => {
         expect(decisionsJoiner({})({})).toEqual('')
         expect(decisionsJoiner({ Unit: true })({})).toEqual('Unit')
-        expect(decisionsJoiner({ Unit: true })({ Component: true })).toEqual('Unit, Component')
-        expect(decisionsJoiner({ Unit: true, Component: true })({ E2E: true })).toEqual('Unit, Component, E2E')
+        expect(decisionsJoiner({})({ Unit: true })).toEqual('Unit')
+        expect(decisionsJoiner({ Unit: true })({ Component: true })).toEqual('Unit')
+        expect(decisionsJoiner({ Unit: true, Component: true })({ E2E: true })).toEqual('Unit, Component')
         expect(decisionsJoiner({})({ Unit: true, Component: true, E2E: true })).toEqual('Unit, Component, E2E')
     })
 
@@ -88,7 +89,7 @@ describe('analyzer', () => {
         const getChannel = getChannelByCheckers(checkers)
         const joiner = parallelDecisionsJoiner([
             getChannel('content'),
-            getChannel('path')
+            getChannel('path'),
         ])
         expect(joiner('')).toEqual('')
         expect(joiner({ content: 'content1' })).toEqual('Unit')

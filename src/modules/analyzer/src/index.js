@@ -1,16 +1,8 @@
 const { parallelSync, pipeSync, C } = require('../../../utility/src/combinators')
-const { someCSync } = require('../../../utility/src/array')
 const { getProp, isObjectFilled } = require('../../../utility/src/object')
-const { testC } = require('../../../utility/src/regexp')
-const { log } = require('../../../utility/src/debuggers')
+const { testArray, testArrayInverted } = require('../../../utility/src/regexp')
+// const { log } = require('../../../utility/src/debuggers')
 const { DECISION_TYPES_MAP } = require('../../../constants')
-
-const testArray = pipeSync([
-    C(testC),
-    someCSync
-])
-
-const testArrayInverted = C(testArray)
 
 const decisionJoiner = unit => component => e2e => {
     const result = {}
@@ -41,8 +33,8 @@ const getDecision = pipeSync([
     getChannelByCheckers,
     getChannel => parallelDecisionsJoiner([
         getChannel('content'),
-        getChannel('path')
-    ])
+        getChannel('path'),
+    ]),
 ])
 
 module.exports = {
@@ -53,5 +45,5 @@ module.exports = {
     parallelDecisionJoiner,
     parallelDecisionsJoiner,
     getChannelByCheckers,
-    getDecision
+    getDecision,
 }

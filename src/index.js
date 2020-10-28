@@ -14,7 +14,6 @@ const PARAMS_FOLDER = 'params'
 const MODULE_NAMES = [
     // 'logger',
     'sniffer',
-    // 'snifferMocked',
     // 'logger',
     'analyzer',
     // 'logger',

@@ -2,43 +2,42 @@ module.exports = {
     sniffer: {
         root: '/home/nybble/dev/marketplace/platform.touch',
         extensions: [
-            '.js'
+            '.js',
         ],
         exclude: {
             files: [
-                'helpers.',
-                '.response.',
-                '.result.',
-                'testData.',
-                'mock.',
-                'dataSamples',
-                'deps.',
-                'utils.'
+                /helpers\./i,
+                /\.response\./i,
+                /\.result\./i,
+                /testData\./i,
+                /mock\./i,
+                /dataSamples/i,
+                /deps\./i,
+                /utils\./i,
             ],
             folders: [
-                'mock',
-                'fixtures',
-                'node_modules',
-                '.enb',
-                'deprecated',
-                'testing',
-                'production',
-                'development',
-                'testData',
-                'page-objects',
-                'helpers',
-                'client-scripts',
-                'configs',
-                'commands',
-                'scenarios'
-            ]
+                /mock/i,
+                /fixtures/i,
+                /node_modules/i,
+                /\.enb/i,
+                /deprecated/i,
+                /testing/i,
+                /production/i,
+                /development/i,
+                /testData/i,
+                /page-objects/i,
+                /helpers/i,
+                /client-scripts/i,
+                /configs/i,
+                /commands/i,
+                /scenarios/i,
+            ],
         },
         validPaths: [
-            // '.',
-            'spec(_|/)',
-            'test',
-            'gemini'
-        ]
+            /spec(_|\/)/i,
+            /test/i,
+            /gemini/i,
+        ],
     },
     analyzer: {
         checkers: {
@@ -47,7 +46,7 @@ module.exports = {
                     /components\//,
                     /containers\//,
                     /selectors\//,
-                    /\.blocks\//
+                    /\.blocks\//,
                 ],
                 content: [
                     /компонент/i,
@@ -58,14 +57,14 @@ module.exports = {
                     /быть виде?н/i,
                     /показыв/i,
                     /\.modelImage\./,
-                    /outletRadioCheckedByIndex/i
-                ]
+                    /outletRadioCheckedByIndex/i,
+                ],
             },
             E2E: {
                 path: [
                     /gemini/,
                     /\/tops\/pages\//,
-                    /\.pages\//
+                    /\.pages\//,
                 ],
                 content: [
                     /страниц/i,
@@ -75,7 +74,7 @@ module.exports = {
                     /модал(ьн|к)/,
                     /\.yaOpenPage/,
                     /\.createPageObject/,
-                ]
+                ],
             },
             Unit: {
                 path: [
@@ -85,14 +84,14 @@ module.exports = {
                     /epics\//,
                     /entities\//,
                     /\/modules/,
-                    /utils\//
+                    /utils\//,
                 ],
-                content: []
-            }
-        }
+                content: [],
+            },
+        },
     },
     reporter: {
         root: '/home/nybble/dev/marketplace/platform.touch/',
-        filepath: 'marketplace/touch.csv'
-    }
+        filepath: 'marketplace/touch.csv',
+    },
 }

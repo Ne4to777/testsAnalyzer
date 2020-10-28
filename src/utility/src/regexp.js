@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-cond-assign */
-const { debugParams } = require('./debuggers')
+// const { debugParams } = require('./debuggers')
+const { pipeSync, C } = require('./combinators')
+const { someCSync } = require('./array')
 
 const regExpOf = params => value =>
     // debugParams({ name: 'regExpOf', types: ['string|regexp', String] })(params, value) ||
@@ -26,9 +28,18 @@ const matchC = re => data => {
     if (res) return res[1]
 }
 
+const testArray = pipeSync([
+    C(testC),
+    someCSync,
+])
+
+const testArrayInverted = C(testArray)
+
 module.exports = {
     regExpOf,
     testC,
     matchC,
-    getGroupMatches
+    getGroupMatches,
+    testArray,
+    testArrayInverted,
 }

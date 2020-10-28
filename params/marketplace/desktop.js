@@ -2,44 +2,43 @@ module.exports = {
     sniffer: {
         root: '/home/nybble/dev/marketplace/platform.desktop',
         extensions: [
-            '.js'
+            '.js',
         ],
         exclude: {
             files: [
-                'helpers.',
-                '.response.',
-                '.result.',
-                'testData.',
-                'mock.',
-                'dataSamples',
-                'deps.',
-                'utils.'
+                /helpers\./i,
+                /\.response\./i,
+                /\.result\./i,
+                /testData\./i,
+                /mock\./i,
+                /dataSamples/i,
+                /deps\./i,
+                /utils\./i,
             ],
             folders: [
-                'mock',
-                'fixtures',
-                'node_modules',
-                '.enb',
-                'deprecated',
-                'testing',
-                'production',
-                'development',
-                'testData',
-                'page-objects',
-                'helpers',
-                'client-scripts',
-                'configs',
-                'commands',
-                'scenarios',
-                'stubs'
-            ]
+                /mock/i,
+                /fixtures/i,
+                /node_modules/i,
+                /\.enb/i,
+                /deprecated/i,
+                /testing/i,
+                /production/i,
+                /development/i,
+                /testData/i,
+                /page-objects/i,
+                /helpers/i,
+                /client-scripts/i,
+                /configs/i,
+                /commands/i,
+                /scenarios/i,
+                /stubs/i,
+            ],
         },
         validPaths: [
-            // '.',
-            'spec(_|/)',
-            'test',
-            'gemini'
-        ]
+            /spec(_|\/)/i,
+            /test/i,
+            /gemini/i,
+        ],
     },
     analyzer: {
         checkers: {
@@ -48,7 +47,7 @@ module.exports = {
                     /components\//,
                     /containers\//,
                     /selectors\//,
-                    /\.blocks\//
+                    /\.blocks\//,
                 ],
                 content: [
                     /компонент/i,
@@ -58,12 +57,12 @@ module.exports = {
                     /рендерит/i,
                     /быть виде?н/i,
                     /показыв/i,
-                ]
+                ],
             },
             E2E: {
                 path: [
                     /gemini/,
-                    /\.pages\//
+                    /\.pages\//,
                 ],
                 content: [
                     /страниц/i,
@@ -74,8 +73,8 @@ module.exports = {
                     /совпадает/i,
                     /\.yaOpenPage/,
                     /\.createPageObject/,
-                    /.yaScenario/
-                ]
+                    /.yaScenario/,
+                ],
             },
             Unit: {
                 path: [
@@ -83,14 +82,14 @@ module.exports = {
                     /\/app\//,
                     /resolvers\//,
                     /epics\//,
-                    /entities\//
+                    /entities\//,
                 ],
-                content: []
-            }
-        }
+                content: [],
+            },
+        },
     },
     reporter: {
         root: '/home/nybble/dev/marketplace/platform.desktop/',
-        filepath: 'marketplace/desktop.csv'
-    }
+        filepath: 'marketplace/desktop.csv',
+    },
 }
