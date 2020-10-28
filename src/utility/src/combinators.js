@@ -18,5 +18,5 @@ const curry2 = f => x => y => f(x, y)
 const curry3 = f => x => y => z => f(x, y, z)
 
 module.exports = {
-    I, K, A, T, W, C, B, S, P, U, Y, pipeSync, pipe, parallelSync, parallel, curry2, curry3
+    I, K, A, T, W, C, B, S, P, U, Y, pipeSync, pipe, parallelSync, parallel, curry2, curry3,
 }

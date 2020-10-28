@@ -12,6 +12,6 @@ module.exports = ({ checkers }) => reduceToArray(async path => {
     return {
         [pathKey]: path,
         [decisionKey]: getDecisionByCheckers({ path, content }),
-        [contentKey]: content
+        [contentKey]: content,
     }
 })

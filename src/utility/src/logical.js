@@ -15,5 +15,5 @@ module.exports = {
     conjunct,
     disjunct,
     and,
-    or
+    or,
 }

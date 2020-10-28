@@ -6,7 +6,7 @@ module.exports = {
         jest: true,
     },
     extends: [
-        'airbnb-base',
+        'airbnb-base'
     ],
     parserOptions: {
         ecmaVersion: 12,
@@ -34,30 +34,30 @@ module.exports = {
             0,
             {
                 maxDepth: 1,
-            },
+            }
         ],
         'max-len': [
             'error',
-            120,
+            120
         ],
         indent: [
             'error',
             4,
             {
                 SwitchCase: 1,
-            },
+            }
         ],
         'linebreak-style': [
             'error',
-            'unix',
+            'unix'
         ],
         quotes: [
             'error',
-            'single',
+            'single'
         ],
         semi: [
             'error',
-            'never',
+            'never'
         ],
         'operator-linebreak': 0,
     },

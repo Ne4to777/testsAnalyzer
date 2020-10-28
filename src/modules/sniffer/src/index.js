@@ -1,64 +1,82 @@
-const { readdir } = require('fs').promises
+const { readDirWithFiles } = require('../../../utility/src/fs')
 const { joinC2, extname } = require('../../../utility/src/path')
-const { pipeSync, T, parallelSync } = require('../../../utility/src/combinators')
-// const { emptyFileLogger } = require('../../../utility/src/dummies')
+const {
+    pipeSync, parallelSync, C, K, B,
+} = require('../../../utility/src/combinators')
 const { execMethodEmpty, getProp } = require('../../../utility/src/object')
-const { mapify } = require('../../../utility/src/array')
+const { someCSync } = require('../../../utility/src/array')
 const { testArrayInverted } = require('../../../utility/src/regexp')
-const { and, negate } = require('../../../utility/src/logical')
+const { negate, conjunct } = require('../../../utility/src/logical')
+const { equal } = require('../../../utility/src/equality')
 // const { log } = require('../../../utility/src/debuggers')
 
-const isFileNameHasValidExtension = extensions => pipeSync([
+const isFileNameHasValidExtension = C(pipeSync([
     extname,
-    getProp,
-    T(mapify(extensions)),
-    Boolean,
+    equal,
+    someCSync,
+]))
+
+const parallelSyncConjunct = parallelSync(conjunct)
+
+const testFileNameExtension = pipeSync([
+    getProp('extensions'),
+    isFileNameHasValidExtension,
 ])
 
-const parallelSyncAnd = parallelSync(and)
+const testNameNotExcluded = pipeSync([
+    getProp('patternsToExclude'),
+    testArrayInverted,
+    negate,
+])
 
-const isFileNameValid = ({ extensions, patternsToExclude }) => parallelSyncAnd([
-    isFileNameHasValidExtension(extensions),
-    negate(testArrayInverted(patternsToExclude)),
+const isFileNameValid = parallelSyncConjunct([
+    testFileNameExtension,
+    testNameNotExcluded,
 ])
 
 const isFolder = execMethodEmpty('isDirectory')
 
-const isFolderValid = ({ patternsToExclude }) => parallelSyncAnd([
-    isFolder,
-    pipeSync([
-        getProp('name'),
-        negate(testArrayInverted(patternsToExclude)),
-    ]),
+const testFolder = parallelSyncConjunct([
+    K(isFolder),
+    C(B)(getProp('name')),
 ])
 
-const sniffR = ({
-    validPaths, extensions, exclude,
-}) => {
-    const validateFilenameByParams = isFileNameValid({ extensions, patternsToExclude: exclude.files })
-    const validateFoldernameByParams = isFolderValid({ patternsToExclude: exclude.folders })
-    const validateFullPath = testArrayInverted(validPaths)
-    return async function* sniff(path) {
-        const dir = await readdir(path, { withFileTypes: true })
+const isFolderValid = pipeSync([
+    testNameNotExcluded,
+    testFolder,
+])
+const prepareSniffParams = ({ validPaths, extensions, exclude }) => ({
+    validateFileName: isFileNameValid({ extensions, patternsToExclude: exclude.files }),
+    validateFolderName: isFolderValid({ patternsToExclude: exclude.folders }),
+    validateFullPath: testArrayInverted(validPaths),
+})
+
+const sniffR = pipeSync([
+    prepareSniffParams,
+    ({
+        validateFileName, validateFolderName, validateFullPath,
+    }) => async function* sniff(path) {
+        const dirs = await readDirWithFiles(path)
         const joinByPath = joinC2(path)
-        for (const dirent of dir) {
+        for (const dirent of dirs) {
             const { name } = dirent
             const fullPath = joinByPath(name)
-            if (validateFoldernameByParams(dirent)) {
+            if (validateFolderName(dirent)) {
                 yield* sniff(fullPath)
-            } else if (validateFilenameByParams(name)) {
-                if (validateFullPath(fullPath)) {
-                    yield fullPath
-                }
+            } else if (validateFileName(name) && validateFullPath(fullPath)) {
+                yield fullPath
             }
         }
-    }
-}
+    },
+])
 
 module.exports = {
+    testFileNameExtension,
+    testNameNotExcluded,
     isFileNameHasValidExtension,
     isFileNameValid,
     isFolder,
+    testFolder,
     isFolderValid,
     sniffR,
 }

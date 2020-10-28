@@ -27,7 +27,7 @@ module.exports = {
 
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [
-        '/node_modules/'
+        '/node_modules/',
     ],
 
     // Indicates which provider should be used to instrument code for coverage
@@ -84,7 +84,9 @@ module.exports = {
     // moduleNameMapper: {},
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-    // modulePathIgnorePatterns: [],
+    modulePathIgnorePatterns: [
+        '/__mocks__/',
+    ],
 
     // Activates notifications for test results
     // notify: false,
@@ -118,7 +120,7 @@ module.exports = {
 
     // A list of paths to directories that Jest should use to search for files in
     roots: [
-        '<rootDir>/src'
+        '<rootDir>/src',
     ],
 
     // Allows you to use a custom runner instead of Jest's default test runner
@@ -148,12 +150,12 @@ module.exports = {
     // The glob patterns Jest uses to detect test files
     testMatch: [
         '**/__tests__/**/*.[jt]s?(x)',
-        '**/?(*.)+(spec|test).[tj]s?(x)'
+        '**/?(*.)+(spec|test).[tj]s?(x)',
     ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
     testPathIgnorePatterns: [
-        '/node_modules/'
+        '/node_modules/',
     ],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files

@@ -1,4 +1,4 @@
-const { parallelSync, pipeSync, C } = require('../../../utility/src/combinators')
+const { parallelSync, pipeSync } = require('../../../utility/src/combinators')
 const { getProp, isObjectFilled } = require('../../../utility/src/object')
 const { testArray, testArrayInverted } = require('../../../utility/src/regexp')
 // const { log } = require('../../../utility/src/debuggers')

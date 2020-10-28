@@ -1,7 +1,7 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 const {
-    parallel, pipe, I, C, T, A
+    parallel, pipe, I, C, T, A,
 } = require('./utility/src/combinators')
 const { reduceC } = require('./utility/src/array')
 const { getProp } = require('./utility/src/object')
@@ -15,9 +15,9 @@ const MODULE_NAMES = [
     // 'logger',
     'sniffer',
     // 'logger',
-    'analyzer',
+    // 'analyzer',
     // 'logger',
-    'reporter'
+    // 'reporter',
 
 ]
 
@@ -30,7 +30,7 @@ const reduceModules = C(reduceC(I))(MODULE_NAMES)
 
 const chargeModuleWithParams = params => parallel(A)([
     getModule,
-    getPropI(params)
+    getPropI(params),
 ])
 
 const composeModules = accModule => module => pipe([
@@ -40,7 +40,7 @@ const composeModules = accModule => module => pipe([
 
 const composeChargedModuleWithParams = params => accModule => pipe([
     chargeModuleWithParams(params),
-    composeModules(accModule)
+    composeModules(accModule),
 ])
 
 const chargeModulesWithParams = pipe([
@@ -51,5 +51,5 @@ const chargeModulesWithParams = pipe([
 
 module.exports = pipe([
     getParamsModule,
-    chargeModulesWithParams
+    chargeModulesWithParams,
 ])

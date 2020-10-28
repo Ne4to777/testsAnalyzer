@@ -6,11 +6,11 @@ const { FileLogger, log } = require('../../utility/src/debuggers')
 const loggerForInvalids = new FileLogger({
     root: 'output',
     filesOutput: 'invalidFileNames.txt',
-    pathsOutput: 'invalidFullPaths.txt'
+    pathsOutput: 'invalidFullPaths.txt',
 })
 const loggerForValids = new FileLogger({
     root: 'output',
-    pathsOutput: 'validFullPaths.txt'
+    pathsOutput: 'validFullPaths.txt',
 })
 
 const logToFiles = pipe([
@@ -28,4 +28,4 @@ const sniff = pipeSync([
     // ])
 ])
 
-module.exports = params => () => sniff(params)(params.root)
+module.exports = params => async () => sniff(params)(params.root)

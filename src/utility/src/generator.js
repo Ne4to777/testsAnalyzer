@@ -7,5 +7,5 @@ const generatorToArray = async (iter = emptyGenerator()) => {
 }
 
 module.exports = {
-    generatorToArray
+    generatorToArray,
 }

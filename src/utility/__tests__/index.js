@@ -1,3 +1,7 @@
-const { emptyTest } = require('../src/dummies')
+const { testArrayInverted } = require('../src/regexp')
 
-emptyTest()
+describe('utility', () => {
+    test('testArrayInverted', () => {
+        expect(testArrayInverted([/foo/])('.js')).toEqual(false)
+    })
+})

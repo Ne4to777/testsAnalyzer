@@ -3,18 +3,18 @@
 
 const { write } = require('../../utility/src/fs')
 const {
-    pipeSync, pipe, parallelSync, I, K, C
+    pipeSync, pipe, parallelSync, I, K, C,
 } = require('../../utility/src/combinators')
 const {
-    arrayToCsv, joinCSync, reduceToArraySync, filterCSync, reduceCSync, last, concatCSync, isEmpty, mapCSync, head
+    arrayToCsv, joinCSync, reduceToArraySync, filterCSync, reduceCSync, last, concatCSync, mapCSync,
 } = require('../../utility/src/array')
 const { joinAbs } = require('../../utility/src/path')
 const { getProp } = require('../../utility/src/object')
 const { trimLeft, getEmptyString, splitC } = require('../../utility/src/string')
-const { getGroupMatches, testC, } = require('../../utility/src/regexp')
-const { ifElse, ifThen } = require('../../utility/src/conditional')
+const { getGroupMatches, testC } = require('../../utility/src/regexp')
+const { ifElse } = require('../../utility/src/conditional')
 const { DECISION_TYPES_MAP, SCHEME } = require('../../constants')
-const { log } = require('../../utility/src/debuggers')
+// const { log } = require('../../utility/src/debuggers')
 const { equal } = require('../../utility/src/equality')
 
 const [pathKey, decisionKey, contentKey] = SCHEME
@@ -32,7 +32,7 @@ const ifLastEqual = pipeSync([
 const duplicateFilter = parallelSync(I)([
     ifLastEqual,
     K,
-    C(concatCSync)
+    C(concatCSync),
 ])
 
 const deduplicateArray = reduceCSync([])(duplicateFilter)
@@ -42,7 +42,7 @@ const testForGemini = testC(/gemini/)
 const matchByRE = n => re => ifElse(testC(re))(
     pipeSync([
         getGroupMatches(n)(re)(I),
-        joinCSync('\n')
+        joinCSync('\n'),
     ])
 )(
     getEmptyString
@@ -84,7 +84,7 @@ const extractContent = pipeSync([
     mapCSync(parallelSync(x => y => z => x || y || z)([
         hermioneMatch,
         unitMatch,
-        anyMatch
+        anyMatch,
     ])),
     filterCSync(Boolean),
     deduplicateArray,
@@ -97,7 +97,6 @@ const beautify = pipeSync([
     trimRoot => reduceToArraySync(item => {
         const path = item[pathKey]
         let decision = item[decisionKey]
-        // console.log(path)
 
         let content = extractContent(item[contentKey])
         if (testForGemini(path)) {
@@ -107,26 +106,24 @@ const beautify = pipeSync([
         return {
             [pathKey]: trimRoot(path),
             [decisionKey]: decision,
-            [contentKey]: content
+            [contentKey]: content,
         }
-    })
+    }),
 ])
 
-const getContentKey = getProp(contentKey)
-
 const removeEmpty = pipeSync([
-    getContentKey,
-    Boolean
+    getProp(contentKey),
+    Boolean,
 ])
 
 const writeToOutput = pipeSync([
     joinOutput,
-    write
+    write,
 ])
 
 module.exports = ({ filepath, root }) => pipe([
     beautify(root),
     filterCSync(removeEmpty),
     arrayToCsv(SCHEME),
-    writeToOutput(filepath)
+    writeToOutput(filepath),
 ])
