@@ -23,14 +23,14 @@ const OUTPUT_PATH = 'output'
 
 const joinOutput = joinAbs(OUTPUT_PATH)
 
-const ifLastEqual = pipeSync([
+const ifPreviousEqual = pipeSync([
     last,
     equal,
     ifElse,
 ])
 
 const duplicateFilter = parallelSync(I)([
-    ifLastEqual,
+    ifPreviousEqual,
     K,
     C(concatCSync),
 ])

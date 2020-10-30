@@ -3,15 +3,15 @@
 /* eslint-disable global-require */
 const { joinAbs } = require('./path')
 const {
-    pipeSync, B
+    pipeSync, B,
 } = require('./combinators')
 const { log } = require('./debuggers')
 
 const getModuleByPath = pipeSync([
     joinAbs,
-    B(require)
+    B(require),
 ])
 
 module.exports = {
-    getModuleByPath
+    getModuleByPath,
 }

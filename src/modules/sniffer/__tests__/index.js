@@ -4,9 +4,8 @@ const {
     isFolderValid,
     testFileNameExtension,
     testNameNotExcluded,
-    sniffR,
+    sniff,
 } = require('../src')
-const { generatorToArray } = require('../../../utility/src/generator')
 
 describe('sniffer', () => {
     test('isFileNameHasValidExtension', () => {
@@ -42,9 +41,9 @@ describe('sniffer', () => {
         expect(isFolderValid({ patternsToExclude: [/foo/] })({ isDirectory: () => true, name: 'foo' })).toEqual(false)
     })
 
-    test('sniffR', async () => {
-        const root = '/home/nybble/projects/testsAnalyzer/src/modules/sniffer/__tests__/__mocks__/'
-        const params = {
+    test('sniff', async () => {
+        const root = `${__dirname}/__mocks__/`
+        const params1 = {
             validPaths: [/foo/],
             extensions: ['.js'],
             exclude: {
@@ -52,10 +51,20 @@ describe('sniffer', () => {
                 files: [/bar/, /foo/, /baz.js/, /bak/],
             },
         }
-        const sniff = async path => generatorToArray(await sniffR(params)(path))
-        // const sniff = sniffR(params)
-        expect(await sniff(root)).toEqual([
+        const params2 = {
+            validPaths: [/bar/],
+            extensions: ['.ts'],
+            exclude: {
+                folders: [],
+                files: [/bar/],
+            },
+        }
+
+        expect(await sniff(params1)(root)).toEqual([
             `${root}foo/baz/bazFile.js`,
+        ])
+        expect(await sniff(params2)(root)).toEqual([
+            `${root}bar/foo.ts`,
         ])
     })
 })
