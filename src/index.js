@@ -15,9 +15,9 @@ const MODULE_NAMES = [
     // 'logger',
     'sniffer',
     // 'logger',
-    // 'analyzer',
+    'analyzer',
     // 'logger',
-    // 'reporter',
+    'reporter',
 
 ]
 
