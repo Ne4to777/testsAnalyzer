@@ -17,7 +17,7 @@ const arrayToCsv = scheme => data => new Promise((resolve, reject) => csv
         data,
         {
             header: true,
-            columns: scheme
+            columns: scheme,
         },
         (err, chunk) => err ? reject(err) : resolve(chunk)
     ))
@@ -52,5 +52,5 @@ module.exports = {
     head,
     isEmpty,
     isFilled,
-    mapCSync
+    mapCSync,
 }

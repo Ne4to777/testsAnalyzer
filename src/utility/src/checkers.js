@@ -71,5 +71,5 @@ module.exports = {
     isExists,
     isNotExists,
     isNaN,
-    isNotNaN
+    isNotNaN,
 }

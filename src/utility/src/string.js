@@ -6,5 +6,5 @@ module.exports = {
     trimLeft,
     replaceC,
     getEmptyString,
-    splitC
+    splitC,
 }

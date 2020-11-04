@@ -1,3 +1,4 @@
+const { resolve } = require('path')
 const {
     isFileNameHasValidExtension,
     isFileNameValid,
@@ -61,10 +62,10 @@ describe('sniffer', () => {
         }
 
         expect(await sniff(params1)(root)).toEqual([
-            `${root}foo/baz/bazFile.js`,
+            resolve(`${root}foo/baz/bazFile.js`),
         ])
         expect(await sniff(params2)(root)).toEqual([
-            `${root}bar/foo.ts`,
+            resolve(`${root}bar/foo.ts`),
         ])
     })
 })
